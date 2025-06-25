@@ -1,5 +1,3 @@
-// src/pages/Dashboard.jsx
-
 import { useEffect, useState } from 'react';
 import {
   Box,
@@ -8,9 +6,15 @@ import {
   Typography,
   Grid,
   CircularProgress,
-  Divider
+  Divider,
+  Toolbar,
+  AppBar,
+  CssBaseline,
+  IconButton,
 } from '@mui/material';
+// import MenuIcon from '@mui/icons-material/Menu';
 import { fetchAdminOverview } from '../api/api';
+import Sidebar from '../components/Sidebar';
 
 const Dashboard = () => {
   const [overview, setOverview] = useState(null);
@@ -22,7 +26,7 @@ const Dashboard = () => {
       try {
         const res = await fetchAdminOverview();
         setOverview(res.data);
-      } catch (err) {
+      } catch {
         setError('Failed to load dashboard data');
       } finally {
         setLoading(false);
@@ -48,63 +52,90 @@ const Dashboard = () => {
   }
 
   return (
-    <Box p={4}>
-      <Typography variant="h4" gutterBottom>
-        Admin Dashboard
-      </Typography>
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <Toolbar>
+          <IconButton color="inherit" edge="start" sx={{ mr: 2 }}>
+            {/* <MenuIcon /> */}
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            GreenTrace Dashboard
+          </Typography>
+        </Toolbar>
+      </AppBar>
 
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Average Emission</Typography>
-              <Typography variant="h4" color="primary">{overview.average_emission} kg</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+      <Sidebar />
 
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Total Users</Typography>
-              <Typography variant="h4" color="primary">{overview.total_users}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+      <Box component="main" sx={{ flexGrow: 1, p: 4, ml: '240px' }}>
+        <Toolbar />
+        <Typography variant="h4" gutterBottom>
+          Admin Dashboard
+        </Typography>
 
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Total Activities</Typography>
-              <Typography variant="h4" color="primary">{overview.total_activities}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ bgcolor: 'rgba(76, 175, 80, 0.1)', backdropFilter: 'blur(5px)' }}>
+              <CardContent>
+                <Typography variant="h6">Average Emission</Typography>
+                <Typography variant="h4" color="primary">
+                  {overview.average_emission} kg
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Last Activity Date</Typography>
-              <Typography variant="body1">{new Date(overview.last_activity_date).toLocaleString()}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ bgcolor: 'rgba(33, 150, 243, 0.1)', backdropFilter: 'blur(5px)' }}>
+              <CardContent>
+                <Typography variant="h6">Total Users</Typography>
+                <Typography variant="h4" color="primary">
+                  {overview.total_users}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
 
-        <Grid item xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>Emission by Category</Typography>
-              <Divider sx={{ mb: 2 }} />
-              {Object.entries(overview.emission_by_category).map(([category, value]) => (
-                <Box key={category} display="flex" justifyContent="space-between" mb={1}>
-                  <Typography>{category}</Typography>
-                  <Typography color="primary">{value} kg</Typography>
-                </Box>
-              ))}
-            </CardContent>
-          </Card>
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ bgcolor: 'rgba(255, 152, 0, 0.1)', backdropFilter: 'blur(5px)' }}>
+              <CardContent>
+                <Typography variant="h6">Total Activities</Typography>
+                <Typography variant="h4" color="primary">
+                  {overview.total_activities}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <Card sx={{ bgcolor: 'rgba(156, 39, 176, 0.1)', backdropFilter: 'blur(5px)' }}>
+              <CardContent>
+                <Typography variant="h6">Last Activity Date</Typography>
+                <Typography variant="body1">
+                  {new Date(overview.last_activity_date).toLocaleString()}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Card sx={{ bgcolor: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(5px)' }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Emission by Category
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                {Object.entries(overview.emission_by_category).map(([category, value]) => (
+                  <Box key={category} display="flex" justifyContent="space-between" mb={1}>
+                    <Typography>{category}</Typography>
+                    <Typography color="primary">{value} kg</Typography>
+                  </Box>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 };
