@@ -1,86 +1,71 @@
-import React, { useState } from "react";
-import API from "../api/api";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { Box, Button, TextField, Typography, Paper, Stack } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import API from '../api/api';
 
 const LoginPage = () => {
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
+    setError('');
     try {
-      const res = await API.post("/api/login", formData);
-      if (res.data && res.data.token) {
-        localStorage.setItem("user_id", res.data.user_id);
-        navigate("/dashboard");
-      } else {
-        setError("Invalid response from server.");
-      }
+      const res = await API.post('/login', formData); // uses http://127.0.0.1:5000/api/login via VITE_API_URL
+      localStorage.setItem('user_id', res.data.user_id);
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || "Login failed");
+      setError(err.response?.data?.error || 'Login failed');
     }
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/bg.jpg')" }}
-    >
-      <div className="bg-white bg-opacity-90 shadow-lg rounded-2xl p-10 w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-green-700">
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Paper elevation={3} sx={{ padding: 4, width: '100%', maxWidth: 400 }}>
+        <Typography variant="h5" gutterBottom>
           GreenTrace Login
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">Email</label>
-            <input
-              type="email"
-              name="email"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              name="password"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 outline-none"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {error && <p className="text-red-500">{error}</p>}
-
-          <button
-            type="submit"
-            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition"
-          >
-            Login
-          </button>
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            label="Email"
+            name="email"
+            margin="normal"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            name="password"
+            type="password"
+            margin="normal"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          {error && (
+            <Typography color="error" variant="body2">
+              {error}
+            </Typography>
+          )}
+          <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Log In
+            </Button>
+            <Button variant="outlined" color="secondary" fullWidth onClick={() => navigate('/register')}>
+              Register
+            </Button>
+          </Stack>
         </form>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <a href="/register" className="text-green-700 font-semibold">
-            Register
-          </a>
-        </p>
-      </div>
-    </div>
+      </Paper>
+    </Box>
   );
 };
 
 export default LoginPage;
-

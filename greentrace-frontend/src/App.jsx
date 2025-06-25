@@ -1,12 +1,8 @@
+// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
-// import Dashboard from "./pages/Dashboard";
-// import SubmitActivity from "./pages/SubmitActivity";
-// import ChatAssistant from "./pages/ChatAssistant";
-// import HistoryPage from "./pages/HistoryPage";
-// import GraphPage from "./pages/GraphPage";
-// import AdminOverview from "./pages/AdminOverview";
+import RegisterPage from "./pages/RegisterPage";
+import Dashboard from "./pages/Dashboard"; // ✅ Add this line
 
 function App() {
   return (
@@ -14,12 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        {/* <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/submit" element={<SubmitActivity />} />
-        <Route path="/chat" element={<ChatAssistant />} />
-        <Route path="/history" element={<HistoryPage />} />
-        <Route path="/graph" element={<GraphPage />} />
-        <Route path="/admin" element={<AdminOverview />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ Add this route */}
       </Routes>
     </Router>
   );
