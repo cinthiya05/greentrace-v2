@@ -13,16 +13,21 @@ const LoginPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      const res = await API.post('/login', formData); // uses VITE_API_URL
-      localStorage.setItem('user_id', res.data.user_id);
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
-    }
-  };
+  e.preventDefault();
+  setError('');
+  try {
+    const res = await API.post('/login', formData);
+
+    // Save user_id and name in localStorage
+    localStorage.setItem('user_id', res.data.user_id);
+    localStorage.setItem('user_name', res.data.name);
+
+    navigate('/dashboard');
+  } catch (err) {
+    setError(err.response?.data?.error || 'Login failed');
+  }
+};
+
 
   return (
     <Box sx={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>

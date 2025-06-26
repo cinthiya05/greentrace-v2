@@ -1,13 +1,11 @@
+// src/main.jsx or src/index.js
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import ThemeWrapper from './theme/index.jsx';
-import './App.css';
+import { CustomThemeProvider } from './context/ThemeContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <ThemeWrapper>
-      <App />
-    </ThemeWrapper>
-  </React.StrictMode>
+  <CustomThemeProvider>
+    <App />
+  </CustomThemeProvider>
 );

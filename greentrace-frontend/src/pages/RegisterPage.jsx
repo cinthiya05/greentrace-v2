@@ -12,16 +12,21 @@ const RegisterPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-      const res = await API.post('/register', formData); // POST to http://127.0.0.1:5000/api/register
-      localStorage.setItem('user_id', res.data.user_id);
-      navigate('/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed');
-    }
-  };
+  e.preventDefault();
+  setError('');
+  try {
+    const res = await API.post('/register', formData);
+    
+    // Save user_id and name in localStorage
+    localStorage.setItem('user_id', res.data.user_id);
+    localStorage.setItem('user_name', res.data.name);
+
+    navigate('/dashboard');
+  } catch (err) {
+    setError(err.response?.data?.error || 'Registration failed');
+  }
+};
+
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">

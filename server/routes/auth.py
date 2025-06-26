@@ -7,6 +7,7 @@ bp = Blueprint('auth', __name__)
 @bp.route('/api/register', methods=['POST'])
 def register():
     data = request.json
+
     if User.query.filter_by(email=data['email']).first():
         return jsonify({'error': 'Email already registered'}), 409
 
@@ -17,7 +18,13 @@ def register():
     )
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User registered successfully'})
+
+    return jsonify({
+        'message': 'User registered successfully',
+        'user_id': new_user.id,
+        'name': new_user.name
+    }), 200
+
 
 @bp.route('/api/login', methods=['POST'])
 def login():
